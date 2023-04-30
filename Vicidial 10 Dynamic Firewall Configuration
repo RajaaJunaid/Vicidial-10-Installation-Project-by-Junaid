@@ -1,0 +1,144 @@
+vicibox 10 dynamic portal configuration:
+
+  STEP 1: Bug fix the  VB-firewall code.
+SSH to the server,  Edit the VB-firewall and replace IPBLACK to IPDYNAMIC at line no 763
+
+run this query: vi +763 /usr/bin/VB-firewall
+
+doipnetslist(\@dynamicips, $IPBLACK, "X", "DynamicList");
+
+change to
+
+doipnetslist(\@dynamicips, $IPDYNAMIC, "X", "DynamicList");
+
+pr run this command
+cd /usr/bin/
+
+sed -i '763s/IPBLACK/IPDYNAMIC/' VB-firewall
+
+save the file.
+if you are using vi editor type ctrol+c wq to save it.
+
+STEP 2: Fix the Public Zone missing Rules.
+
+edit the public.xml using vi editor and add below lines before the </zone> line
+
+vi /etc/firewalld/zones/public.xml
+
+<rule family="ipv4">
+    <source ipset="whiteips"/>
+    <service name="apache2"/>
+    <accept/>
+  </rule>
+  <rule family="ipv4">
+    <source ipset="whitenets"/>
+    <service name="apache2"/>
+    <accept/>
+  </rule>
+  <rule family="ipv4">
+    <source ipset="dynamiclist"/>
+    <service name="apache2"/>
+    <accept/>
+  </rule>
+  <rule family="ipv4">
+    <source ipset="whiteips"/>
+    <service name="apache2-ssl"/>
+    <accept/>
+  </rule>
+  <rule family="ipv4">
+    <source ipset="whitenets"/>
+    <service name="apache2-ssl"/>
+    <accept/>
+  </rule>
+  <rule family="ipv4">
+    <source ipset="dynamiclist"/>
+    <service name="apache2-ssl"/>
+    <accept/>
+  </rule>
+  <rule family="ipv4">
+    <source ipset="whiteips"/>
+    <service name="asterisk"/>
+    <accept/>
+  </rule>
+  <rule family="ipv4">
+    <source ipset="whitenets"/>
+    <service name="asterisk"/>
+    <accept/>
+  </rule>
+  <rule family="ipv4">
+    <source ipset="dynamiclist"/>
+    <service name="asterisk"/>
+    <accept/>
+  </rule>
+
+save the file.
+
+STEP 3: Activate IP list Admin
+Navigate to ADMIN > SYSTEM SETTINGS 
+Enable Allow IP LIst : 1
+Submit
+
+STEP 4: Attach the Public Zone to the Interface.
+
+Access your Vicibox through SSH either putty or direct server console.
+
+type yast firewall 
+
+navigate to INTERFACES and press Enter
+
+Now in the Right Side pane, Select your public interface and Select Change Zone  or Press ALT+C
+to change the zone from Default to Public,
+
+Once the Public Zone selected from drop down, select accept or press ALT+A to save the configuration
+
+STEP 5: Removing the default services from Public zone and add viciportal, viciportal-ssl service .
+
+In SSH console type
+yast firewall
+select the Public zone in the list.
+
+Now from the Allowed list select the below service and select remove or press ALT+e
+apache2
+apache2-ssl
+asterisk
+dhcpv6-client
+
+Press Remove or ALT+e
+
+Next from the Known services Select below service and press add or ALT+d
+
+viciportal
+viciportal-ssl
+
+ Select Accept or press ALT+A to save the changes.
+
+ STEP 6:  Add the VB-firewall in crontab 
+
+type crontab -e and at the last line and delete below entries
+
+@reboot /usr/bin/VB-firewall --voipbl --noblack --quiet
+0 */6 * * * /usr/bin/VB-firewall --voipbl --noblack --flush --quiet
+
+Then add the below entries
+
+@reboot /usr/bin/VB-firewall --white --dynamic --quiet
+* * * * * /usr/bin/VB-firewall --white --dynamic --quiet
+Finaly give reboot to the server 
+
+ STEP 7: Test the dynamic Portal
+
+Access the Vicibox dynamic portal and authenticate to add your ip in dynamic whitelist
+
+for http type
+http://vicibox-ip:81/valid8.php
+
+for https type
+https://vicibox-ip:446/valid8.php
+
+ STEP :8 , Commands to test the Firewall,ipset,nftables
+
+ipset --list  -- check your IP is listed in respective IP set name
+
+firewall-cmd --list-all  - to check services and rules in public zone
+
+nft list table inet firewalld - list the nftables rules.
