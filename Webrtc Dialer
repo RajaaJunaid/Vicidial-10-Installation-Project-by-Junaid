@@ -1,0 +1,87 @@
+
+*to create Directory from SSH
+putty: 
+mkdir /etc/certs/
+
+save the 3 certificate column file in different folder.
+
+Winscp: Paste certificate 
+
+mv /etc/apache2/vhosts.d/vhost-ssl.template /etc/apache2/vhosts.d/vhost-ssl.conf
+
+nano /etc/apache2/vhosts.d/1111-default-ssl.conf
+
+Run and change this> ServerName infoteledialer1.autelecom.net
+do change the domain name above
+
+nano /etc/apache2/vhosts.d/1111-default.conf
+
+Run this on 2nd line> ServerName infoteledialer.autelecom.net
+do change the domain name above
+
+nano /etc/apache2/vhosts.d/vhost-ssl.conf
+
+SSLCertificateFile /etc/certs/certificate.crt
+SSLCertificateKeyFile /etc/certs/private.key
+paste this on the last line
+
+service apache2 restart
+
+
+/etc/asterisk
+ 
+Winscp:
+paste http.conf
+
+Putty:
+type cd 
+/srv/www/htdocs/agc/
+Run the following command to get the viciphone source
+ 
+git clone https://github.com/vicimikec/ViciPhone.git
+This will download the source folder of viciphone in the agc folder
+
+nano /etc/asterisk/modules.conf
+
+load => res_http_websocket.so
+
+asterisk -rx 'http show status'
+
+on web:
+go to template
+
+type=friend
+host=dynamic
+encryption=yes
+avpf=yes
+icesupport=yes
+directmedia=no
+transport=wss
+force_avp=yes
+dtlsenable=yes
+dtlsverify=no
+dtlscertfile=/etc/certs/certificate.crt
+dtlsprivatekey=/etc/certs/private.key
+dtlssetup=actpass
+rtcp_mux=yes
+
+Servers:
+
+Web Socket URL:
+wss://infoteledialer1.autelecom.net:8089/ws
+Auto-Restart Asterisk:	Y
+
+System Settings:
+
+Webphone URL:
+https://phone.viciphone.com/viciphone.php
+
+putty:
+
+mysql
+use asterisk;
+update phones set is_webphone = 'Y';
+update phones set use_external_server_ip = 'Y';
+update phones set template_id = 'webRTC';
+
+reboot
