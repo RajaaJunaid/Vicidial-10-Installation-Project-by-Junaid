@@ -1,0 +1,60 @@
+For upgrading your server to asterisk>type command vicibox-ast16
+
+then type: yes
+
+wait till it will be upgrade on your server.
+
+reboot
+
+for checking if it upgraded or not:
+
+login: root
+pass: Autelecom
+
+type: asterisk -rvvvvvvv
+
+then go to the dialer>server>asterisk version>type your asterisk 16 vici
+
+Rebuild conf files:(y)
+
+then submit
+
+if u want to check it again and your sockets>type>screen -ls
+
+(Also it can use for scratch installation)
+
+
+to change server ip:
+
+go to putty type: /usr/share/astguiclient/ADMIN_update_server_ip.pl
+
+then type: (y)
+
+put new server ip
+
+then type: (y)
+
+reboot
+
+check your sockets are running: screen -ls
+
+and refresh the dialer page:
+
+if calls are not connecting go to pc
+on putty type: nano/etc/asterisk/sip.conf
+
+and change the new ip
+
+Vivibox 10 ip list feature:
+
+go to admin setting> system setting>allow ip list 1>submit
+
+then option will be created on admin
+
+vici black: and vici white
+
+we can allow ips and denoy with the help of this feature.
+
+
+
+
