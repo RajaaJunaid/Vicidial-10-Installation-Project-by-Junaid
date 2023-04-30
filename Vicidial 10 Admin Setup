@@ -1,0 +1,76 @@
+Vicibox 10 System Settings:                      Vicibox 7:
+Enable Languages: 1
+Default Language: English                        Enable Third Webform:	1
+
+Clear Frozen Calls: 1
+Allowed SIP Stacks:1
+Agent Soundboards: 1
+Agent Browser Call Alerts: 1
+Agent Hidden Browser Sound Seconds: 20sec
+Enable Pause Code Time Limits: 1
+Allow Voicemail Greeting Chooser: 1
+Agent Search Method Override: 1
+USA-Canada Phone Number Dialcode Fix: 1
+List Status Modification Confirmation: 1
+Enable Second Script Tab: 1
+Enable TTS Integration:	1
+Enable CallCard: 1
+Enable Campaign Test Calls: 1
+DID System Filter: 1
+Inbound Answer Configuration: 1
+New Leads Per List Limit: 1
+Enable Daily Called Count Limits: 1
+Enable 24-Hour Called Count Limits: 1
+Call Quota Lead Ranking: 1
+Enable Custom List Fields: 1
+Enable Expanded List Stats: 1
+Enable DID Entry List ID: 1
+Lead Manager Active Lists: 1
+Enable Drop Lists: 1
+Admin Lead Source ID Display: 1
+Allow Web DB Debug: 1
+Cached Realtime Carrier Stats: 1
+OpenSIPs CID Name Support: 1
+Enable Remote Agent Extension Overrides: 1
+Enable Agent Whisper Monitoring: 1
+Enable User Hide RealTime: 1
+Enable Manual Dial Auto Next: 1
+Enable Manual Dial Validation: 1
+Enable Contacts: 1
+Call Menu Qualify Enabled: 1
+Call Menu Alt DTMF Logging: 1
+Allow IP Lists:	1
+Allow Emails: 1
+Allow Chats: 1
+Enable Automated Reports: 1
+Default External Server IP: 1
+Default Webphone: 1
+
+Once we done with these settings some setting will auto changed in (6666) admin
+so u have to go and set these as well:
+
+new (6666) admin is here.
+
+User New Lead Limits: Overall limit -1
+Agent Call Email: 0
+Agent Call Chat: 0
+QC Enabled: 1
+QC User Level:	7
+QC Pass: 1
+QC Finish: 1
+QC Commit: 1
+Modify IP Lists: 1
+Ignore IP List:	1
+
+
+
+@reboot /usr/bin/VB-firewall --dynamic --whitelist=ViciWhite
+* * * * * /usr/bin/VB-firewall --dynamic --whitelist-ViciWhite
+
+### Check letencrypt.org and renew cert if needed and reload config
+0 0 * * 0 /usr/bin/certbot -n --webroot renew >/dev/null 2>&1
+10 0 * * 0 /usr/sbin/apache2ctl -k graceful >/dev/null 2>&1
+11 0 * * 0 /usr/sbin/asterisk -rx "module reload http" >/dev/null 2>&1
+
+
+
