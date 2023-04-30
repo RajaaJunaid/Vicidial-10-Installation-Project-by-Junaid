@@ -1,0 +1,67 @@
+(Note: we only have to add these setting on virtual box if we install it there, if we install it on vm it will auto change.
+On Oracle Virtual Box
+
+Add name: Junaid or any other
+
+operating system: linux
+
+version: opensuse (64 bit)
+
+Memory type: around 2000
+
+Hard disk: tab on Create a hard disk now
+
+Hard disk file type: tab on VDI (virtual disk image)
+
+Storage and physical hard disk: tab on Dynamically allocated
+
+File Size: could be 20 or it depends on you
+
+Then tab on create:
+
+Go to settings>system>processor>make it 2 core>storage>tab on Empty>select iso file 
+
+Network: Adapter 1>Attached to> select bridge network, it will auto select your network onto your pc
+
+Then ok and start the machine)
+
+On the first interface choose install vicibox 10v and enter
+
+Destroy all data on hard disk: yes
+it will take some time
+
+login: root
+Password: vicidial
+system locale: ok
+select keyboard layout: ok
+Agrrement: yes
+select time zone: i have selected asia and karachi
+Enter root password: Autelecom
+Type: yast lan and do yast lan setting
+ping your gateway or google.com
+if you want to check your ip you can type: ip add
+
+zypper ref: for updating opensuse 15.3
+will take some time
+
+zypper up: also for upgrading
+will take some time
+
+reboot
+
+remove the iso from vm
+
+start machine again
+
+login:root
+pass: Junaid
+
+for installing:Vicibox-express
+then reboot
+
+for checking the sockets that are running type: screen -ls
+
+afer installation.
+
+open the dialer on web and do all vicibox setting phone, users, carrier, campaign, server, system setting.
+
