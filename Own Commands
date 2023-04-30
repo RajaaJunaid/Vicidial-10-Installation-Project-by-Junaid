@@ -1,0 +1,77 @@
+*to enter in asterisk 
+asterisk -r
+	*to reload asterisk, dialplan and sip 
+	reload 
+	dialplan reload 
+	sip reload 
+	*to check sips connection 
+	sip show peers
+
+
+*to add IP
+nano /etc/rules	
+	ctrl x
+	y 
+	Enter
+iptables-restore < /etc/rules
+
+*to check dialer's load 
+htop
+
+*to free up memory 
+free && sync && echo 3 > /proc/sys/vm/drop_caches && free 
+
+*for firewall check
+iptables -L -n 
+
+
+*To inactive Firewall
+iptables -F
+ 
+*TO REPAIR server (run in DB)
+	mysqlcheck -u cron -p1234 --auto-repair --all-databases
+	mysqlcheck -u root -p --auto-repair asterisk
+	*then restart the dialer after repairing 
+	reboot 
+
+
+*to check cron 
+crontab -e
+
+*For UDP Ports Check 
+nano /etc/asterisk/sip.conf 
+	>> bindport= 5060 >> bindport=6001
+
+	nano /etc/sysconfig/SuSEfirewall2.d/services/asterisk
+	>> UDP Port = 5060 >> UDP Port = 6001
+
+*Run query 
+service asterisk restart
+
+*To reactive Firewall
+nano /etc/rc.d/boot.local
+	*paste this query at the end 
+	/usr/sbin/iptables-restore < /etc/rules
+
+*To Enter in Mysql using Asterisk:
+mysql
+use asterisk
+
+**To check User's Password**
+select user, pass from vicidial_users;
+
+*to check carrier log report 
+Reports >  Admin Utilities > Carrier Log Report
+
+
+
+*Dead call settings
+Drop Call Seconds=3
+Available Only Tally=Y
+
+
+
+
+
+
+
