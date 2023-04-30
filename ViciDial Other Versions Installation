@@ -1,0 +1,226 @@
+*First the
+os-install
+
+*After installation
+reboot
+(Select>  Boot From Hardisk)
+
+*yast lan
+setting
+
+*Ping google for test
+ping 8.8.8.8
+ping google.com
+ctrl+c to stop test
+
+*ViciBox Installation :
+vicibox-install
+Enter Dialler IP
+No {Expert Installation, archive server}
+YES {Rest All Yes}
+
+*After installation
+reboot
+*then restart again
+reboot
+
+*Open Browser with Dialer IP:
+*Default Administration Login :
+Username : 6666
+Password : 1234
+
+*Set new Password
+admin password : CyberXify9132
+Login Password: cyber786
+Registration Password: cyber786
+
+
+*Give Permissions to Main Admin : 
+Users >6666>ADMIN INTERFACE OPTIONS> All 0 > 1
+Users >6666>Agent API Access> 0 > 1
+
+*Add User Group 
+>User Group : >Add a new User Group
+Group: agent 
+Description: agent
+*Click on Agent user group
+*add more setting
+Allowed Campaigns: 24hours - default 24 hours calling
+Group Shifts:ALL-GROUPS - All user groups in the system
+Agent Allowed Chat Groups: ALL-GROUPS - All user groups in the system
+Agent Status Viewable Groups: ALL-GROUPS - All user groups in the system
+Allowed User Groups: ALL-GROUPS - All user groups in the system
+Allowed Call Times: 24hours - default 24 hours calling
+*then submit
+
+
+*Make User:
+> users > Add new user
+User name: 1001
+Password:cyber786
+full name:1001
+user group: Agent agent
+phone login: (blank )
+phone password: (blank )
+*submit 
+
+*Edit same User 
+Agent Call Manual > From 0 > 1
+
+*show user: to check user is been made or not
+*Continue series 
+
+*Make phone
+Admin>phones>addnew phones:
+phone extensions: 1001
+dailplan : 1001
+voicemail box: 1001
+Admin user group: (no need to cgange)
+Login Password:	cyber786
+Registration Password:	cyber786
+Agent screen login: 1001
+Phone type : 1001
+Full name : 1001
+*submit
+
+*show phones: to check phone is been made or not
+*Continue series 
+
+*From Admin
+Admin>Server Settings :
+Max Trunks> 500 
+Max Calls per Second > 50
+
+Admin>System Settings 
+Auto Dial Limit : 20
+Max Calls per Second > 50
+
+*Add Campaign
+Campaign ID: 1000		
+Campaign Name: USA Campaign	
+Active: Y	
+Minimum Hopper Level: 1000	
+Auto Dial Level: 4	
+Next Agent Call: Longest_wait_time	
+Local Call Time: 24Hours-default 24 hours calling	
+*Then Submit
+
+*Then do more settings
+List Order : Random
+Dial Method: Ratio
+Dial Level Difference Target: 5---5 Calls waiting for Agents
+Minimum Hopper Level : 1000
+Dial Timeout : 35
+Dial Prefix: 7
+Manual Dial Prefix: 2
+Routing Extension : 8369 (AM detector)
+Campaign Recording : All force 
+3-Way Call Outbound CallerID:	Costumer
+3-Way Call Dial Prefix:	8
+Drop Call Seconds=3
+Available Only Tally=Y
+
+Add A Dial Statuses:
+Auto Answering Machine
+Answering Machine 
+Busy 
+Disconnected Number
+
+*Carrier Settings :
+Admin>carriers>Add new carrier
+
+Carrier ID: softotele
+Carrier Name: Softotele
+Admin User Group: ALL
+Account Entry:
+[softotele]
+disallow=all
+allow=ulaw
+dtmf=rfc2833
+type=friend
+host=51.89.96.131
+
+Global String: SIPEXAMPLE = SIP/softotele
+
+Dialplan Entry:
+exten => _71X.,1,Set(CALLERID(num)=${EXTEN:2:4}${RAND(100001,999999)})
+exten => _71X.,2,AGI(agi://127.0.0.1:4577/call_log)
+exten => _71X.,3,Dial(SIP/softotele/${EXTEN:1},60,tToR)
+exten => _71X.,4,Hangup()
+
+exten => _21X.,1,Set(CALLERID(num)=${EXTEN:2:4}${RAND(100001,999999)})
+exten => _21X.,2,AGI(agi://127.0.0.1:4577/call_log)
+exten => _21X.,3,Dial(SIP/softotele/111#${EXTEN:1},60,tToR)
+exten => _21X.,4,Hangup()
+
+exten => _81XXXXXXXXXX,1,AGI(agi://127.0.0.1:4577/call_log)
+exten => _81XXXXXXXXXX,2,Dial(SIP/112#${EXTEN:1}@softotele,,tTor)
+exten => _81XXXXXXXXXX,3,Hangup
+
+
+
+
+*putty Settings
+
+*to add Firewall
+nano /etc/rules	
+
+#Copy this :
+*filter
+-A INPUT -p tcp --tcp-flags ALL NONE -j DROP
+-A INPUT -p tcp --tcp-flags ALL ALL -j DROP
+-A INPUT -p tcp --tcp-flags ALL SYN,FIN -j DROP
+-A INPUT -p tcp --tcp-flags ALL URG,PSH,FIN -j DROP
+-A INPUT -p tcp --tcp-flags ALL FIN -j DROP
+-A INPUT -p tcp --tcp-flags SYN,RST SYN,RST -j DROP
+-A INPUT -p tcp ! --syn -m state --state NEW -j DROP
+-P INPUT DROP
+-P OUTPUT ACCEPT
+-P FORWARD ACCEPT
+-A INPUT -i lo -j ACCEPT
+-A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
+-A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+-A INPUT -s 51.195.88.4/32 -j ACCEPT
+-A INPUT -s 12.34.56.789/32 -j ACCEPT
+-A INPUT -s 12.34.56.789/32 -j ACCEPT
+-A INPUT -s 12.34.56.789/32 -j ACCEPT
+-A INPUT -s 12.34.56.789/32 -j ACCEPT
+-A INPUT -s 12.34.56.789/32 -j ACCEPT
+-A INPUT -s 12.34.56.789/32 -j ACCEPT
+-A INPUT -s 12.34.56.789/16 -j ACCEPT
+-A INPUT -s 12.34.56.789/16 -j ACCEPT
+-A INPUT -s 12.34.56.789/16 -j ACCEPT
+-A INPUT -s 12.34.56.789/16-j ACCEPT
+COMMIT
+
+* to save file
+ctrl x
+y 
+Press Enter
+*Enter this query to restore Firewall
+iptables-restore < /etc/rules
+
+*to update crons
+crontab -r 
+*then  
+crontab -e
+*paste the new update crons from given file
+
+* to save file
+ctrl x
+y 
+Press Enter
+
+*For UDP Ports Check 
+nano /etc/asterisk/sip.conf 
+	>> bindport= 5060 >> bindport=6001
+
+nano /etc/sysconfig/SuSEfirewall2.d/services/asterisk
+	>> UDP Port = 5060 >> UDP Port = 6001
+	*Run query 
+	service asterisk restart
+
+*To reactive Firewall
+nano /etc/rc.d/boot.local
+	*paste this query at the end 
+	/usr/sbin/iptables-restore < /etc/rules
